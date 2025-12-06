@@ -1,7 +1,19 @@
-services:
-  frontend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+backend:
+    image: danilosantana1/finances-backend-av3:latest
+    container_name: finances-backend
+    depends_on:
+      - postgres
+    environment:
+      # --- AQUI ESTÁ A CORREÇÃO ---
+      # Forçamos a URL completa, ignorando o application.properties interno
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finances
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      
+      # Mantemos as outras variáveis úteis
+      POSTGRES_CREATE_DROP: update
+      SECRET_KEY: minha_chave_secreta_super_segura_123
     ports:
-      - "4200:4200"
+      - "8080:8080"
+    networks:
+      - finances-network
